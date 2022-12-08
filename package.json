@@ -24,7 +24,7 @@
   "scripts": {
     "start": "react-scripts start",
     "start-dev": "concurrently --kill-others-on-fail \"node server.js\" \"yarn start\"",
-    "start-sw": "http-server ./build",
+    "start-sw": "http-server ./build -p 80",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
