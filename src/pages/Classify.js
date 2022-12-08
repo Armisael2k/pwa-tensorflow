@@ -19,8 +19,8 @@ const CANVAS_SIZE = 224;
 const TOPK_PREDICTIONS = 5;
 
 const INDEXEDDB_DB = 'tensorflowjs';
-const INDEXEDDB_STORE = 'model_info_store';
-const INDEXEDDB_KEY = 'web-model';
+const INDEXEDDB_STORE = 'model_inf;o_store';
+const INDEXEDDB_KEY = 'web-model'
 
 /**
  * Class to handle the rendering of the Classify page.
@@ -52,7 +52,7 @@ export default class Classify extends Component {
   async componentDidMount() {
     if (('indexedDB' in window)) {
       try {
-        this.model = await tf.loadLayersModel('indexeddb://' + INDEXEDDB_KEY);
+        this.model = await tf.loadGraphModel('indexeddb://' + INDEXEDDB_KEY);
 
         // Safe to assume tensorflowjs database and related object store exists.
         // Get the date when the model was saved.
@@ -86,18 +86,18 @@ export default class Classify extends Component {
       catch (error) {
         console.log('Not found in IndexedDB. Loading and saving...');
         console.log(error);
-        this.model = await tf.loadLayersModel(MODEL_PATH);
+        this.model = await tf.loadGraphModel(MODEL_PATH);
         await this.model.save('indexeddb://' + INDEXEDDB_KEY);
       }
     }
     // If no IndexedDB, then just download like normal.
     else {
       console.warn('IndexedDB not supported.');
-      this.model = await tf.loadLayersModel(MODEL_PATH);
+      this.model = await tf.loadGraphModel(MODEL_PATH);
     }
 
     this.setState({ modelLoaded: true });
-    this.initWebcam();
+    // this.initWebcam();
 
     // Warm up model.
     let prediction = tf.tidy(() => this.model.predict(tf.zeros([1, IMAGE_SIZE, IMAGE_SIZE, 3])));
@@ -163,7 +163,7 @@ export default class Classify extends Component {
     // Get the latest model from the server and refresh the one saved in IndexedDB.
     console.log('Updating the model: ' + INDEXEDDB_KEY);
     this.setState({ isDownloadingModel: true });
-    this.model = await tf.loadLayersModel(MODEL_PATH);
+    this.model = await tf.loadGraphModel(MODEL_PATH);
     await this.model.save('indexeddb://' + INDEXEDDB_KEY);
     this.setState({
       isDownloadingModel: false,
@@ -306,9 +306,9 @@ export default class Classify extends Component {
       { !this.state.modelLoaded &&
         <Fragment>
           <Spinner animation="border" role="status">
-            <span className="sr-only">Loading...</span>
+            <span className="sr-only">Cargando...</span>
           </Spinner>
-          {' '}<span className="loading-model-text">Loading Model</span>
+          {' '}<span className="loading-model-text">Cargando modelo</span>
         </Fragment>
       }
 
@@ -320,7 +320,7 @@ export default class Classify extends Component {
           aria-controls="photo-selection-pane"
           aria-expanded={this.state.photoSettingsOpen}
           >
-          Take or Select a Photo to Classify
+          Selecciona la imagen
             <span className='panel-arrow'>
             { this.state.photoSettingsOpen
               ? <FaChevronDown />
@@ -366,37 +366,12 @@ export default class Classify extends Component {
                   </Alert>
                 </Container>
               }
-            <Tabs defaultActiveKey="camera" id="input-options" onSelect={this.handleTabSelect}
-                  className="justify-content-center">
-              <Tab eventKey="camera" title="Take Photo">
-                <div id="no-webcam" ref="noWebcam">
-                  <span className="camera-icon"><FaCamera /></span>
-                  No camera found. <br />
-                  Please use a device with a camera, or upload an image instead.
-                </div>
-                <div className="webcam-box-outer">
-                  <div className="webcam-box-inner">
-                    <video ref="webcam" autoPlay playsInline muted id="webcam"
-                           width="448" height="448">
-                    </video>
-                  </div>
-                </div>
-                <div className="button-container">
-                  <LoadButton
-                    variant="primary"
-                    size="lg"
-                    onClick={this.classifyWebcamImage}
-                    isLoading={this.state.isClassifying}
-                    text="Classify"
-                    loadingText="Classifying..."
-                  />
-                </div>
-              </Tab>
-              <Tab eventKey="localfile" title="Select Local File">
+            <Tabs defaultActiveKey="camera" id="input-options" onSelect={this.handleTabSelect} className="justify-content-center">
+              <Tab eventKey="localfile" title="Seleccionar">
                 <Form.Group controlId="file">
-                  <Form.Label>Select Image File</Form.Label><br />
+                  <Form.Label>Selecciona la imagen</Form.Label><br />
                   <Form.Label className="imagelabel">
-                    {this.state.filename ? this.state.filename : 'Browse...'}
+                    {this.state.filename ? this.state.filename : 'Buscar...'}
                   </Form.Label>
                   <Form.Control
                     onChange={this.handleFileChange}
@@ -423,8 +398,8 @@ export default class Classify extends Component {
                         disabled={!this.state.filename}
                         onClick={this.classifyLocalImage}
                         isLoading={this.state.isClassifying}
-                        text="Classify"
-                        loadingText="Classifying..."
+                        text="Clasificar"
+                        loadingText="Clasificando..."
                       />
                     </div>
                   </Fragment>
@@ -435,7 +410,7 @@ export default class Classify extends Component {
           </Collapse>
           { this.state.predictions.length > 0 &&
             <div className="classification-results">
-              <h3>Predictions</h3>
+              <h3>Predicciones</h3>
               <canvas ref="canvas" width={CANVAS_SIZE} height={CANVAS_SIZE} />
               <br />
               <ListGroup>

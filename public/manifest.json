@@ -1,6 +1,6 @@
 {
-  "short_name": "WebClassify",
-  "name": "Progressive Web Classification App",
+  "short_name": "Clasificador de imagenes",
+  "name": "PWA Clasificador de imagenes",
   "icons": [
     {
       "src": "favicon.ico",

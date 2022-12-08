@@ -1,4 +1,5 @@
 node_modules/
+myenv/
 *.DS_Store
 README.md
 .github/

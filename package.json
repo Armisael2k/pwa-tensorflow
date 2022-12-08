@@ -4,7 +4,10 @@
   "private": true,
   "license": "Apache-2.0",
   "dependencies": {
-    "@tensorflow/tfjs": "^1.2.7",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/material": "^5.10.12",
+    "@tensorflow/tfjs": "^1.7.4",
     "bootstrap": "^4.3.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
@@ -21,6 +24,7 @@
   "scripts": {
     "start": "react-scripts start",
     "start-dev": "concurrently --kill-others-on-fail \"node server.js\" \"yarn start\"",
+    "start-sw": "http-server ./build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -43,6 +47,7 @@
     ]
   },
   "devDependencies": {
-    "concurrently": "^4.1.0"
+    "concurrently": "^4.1.0",
+    "http-server": "^14.1.1"
   }
 }
